@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şiirhane — Her şiir, yeni bir dünya</title>
+<style>
+:root{
+  --cream:#f6f0e4; --paper:#fffdf8; --ink:#243126; --muted:#6f746b;
+  --green:#314637; --green2:#4d624e; --gold:#d7b56d; --rose:#c96b5d;
+  --line:#e5dccb; --shadow:0 12px 35px rgba(46,48,39,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.nav{height:72px;background:rgba(255,253,248,.96);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:28px;padding:0 5%;position:sticky;top:0;z-index:20}
+.logo{display:flex;align-items:center;gap:10px;margin-right:auto}
+.logo-mark{font-size:32px;color:var(--green)}
+.logo strong{font-size:25px;display:block;line-height:1}
+.logo small{font-size:11px;color:var(--muted)}
+.nav a{color:var(--ink);text-decoration:none;font-size:14px}
+.nav a:hover{text-decoration:underline}
+.search{display:flex;align-items:center;background:#eee8dc;border-radius:24px;padding:9px 15px;width:230px}
+.search input{border:0;outline:0;background:transparent;width:100%;font-size:13px}
+.btn{border:0;border-radius:24px;padding:11px 19px;background:var(--green);color:white}
+.btn.light{background:white;color:var(--ink);border:1px solid var(--line)}
+.hero{min-height:360px;padding:65px 7%;display:flex;align-items:center;position:relative;overflow:hidden;color:white;background:
+linear-gradient(90deg,rgba(20,31,22,.88),rgba(20,31,22,.48),rgba(20,31,22,.30)),
+url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85") center/cover}
+.hero h1{font-size:48px;max-width:680px;margin:0 0 18px;line-height:1.08}
+.hero p{font-size:18px;max-width:650px;line-height:1.7;color:#f5f0e5}
+.hero .quote{position:absolute;right:8%;bottom:55px;font-style:italic;font-size:17px;max-width:220px;text-align:center}
+.container{max-width:1180px;margin:28px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:1fr 300px;gap:22px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.feature{padding:24px;display:grid;grid-template-columns:1fr 48%;gap:25px}
+.label{display:inline-block;background:#f3dfad;padding:7px 12px;border-radius:18px;font-size:12px}
+h2{font-size:25px;margin:14px 0}
+.excerpt{font-size:17px;line-height:1.7;color:#565b53}
+.meta{font-size:12px;color:var(--muted);margin:12px 0}
+.feature img{width:100%;height:235px;object-fit:cover;border-radius:10px}
+.actions{display:flex;gap:16px;margin-top:18px}
+.action{border:0;background:none;color:var(--muted);padding:0}
+.action.liked{color:var(--rose)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:30px 0 14px}
+.section-head h2{margin:0;font-size:22px}
+.categories{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.category{padding:18px 8px;border:1px solid var(--line);border-radius:11px;text-align:center;background:#faf6ed;cursor:pointer}
+.category:hover,.category.active{outline:2px solid #b5bda9;background:#f0eadb}
+.category span{display:block;font-size:25px;margin-bottom:8px}
+.category small{font-size:12px}
+.poems{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.poem{overflow:hidden}
+.poem img{width:100%;height:120px;object-fit:cover;display:block}
+.poem-body{padding:14px}
+.poem h3{font-size:17px;margin:0 0 7px}
+.poem p{font-size:13px;line-height:1.55;color:var(--muted);height:60px;overflow:hidden}
+.side{padding:20px}
+.side h3{margin:0 0 15px;font-size:20px}
+.rank{display:flex;gap:11px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.rank img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+.rank .num{font-weight:bold;width:18px}
+.rank strong{font-size:13px;display:block}
+.rank small{color:var(--muted)}
+.callout{margin-top:20px;padding:24px;background:var(--green);color:white;border-radius:12px;text-align:center}
+footer{margin-top:50px;background:#26372a;color:#eef0e8;padding:35px 7%;display:flex;justify-content:space-between;gap:20px}
+footer small{color:#c8cec6}
+.empty{padding:35px;text-align:center;color:var(--muted);display:none}
+.modal{position:fixed;inset:0;background:rgba(20,25,20,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--paper);width:min(650px,100%);border-radius:16px;padding:25px}
+.modal-box h2{margin-top:0}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;background:white;outline:0}
+.field textarea{min-height:180px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#26372a;color:white;padding:11px 18px;border-radius:22px;display:none;z-index:80}
+@media(max-width:900px){
+ .nav{gap:12px}.nav a{display:none}.search{width:160px}
+ .grid{grid-template-columns:1fr}.poems{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(4,1fr)}
+ .feature{grid-template-columns:1fr}.hero h1{font-size:38px}.hero .quote{display:none}
+}
+@media(max-width:520px){
+ .logo strong{font-size:20px}.search{width:120px}.hero{padding:45px 6%}.hero h1{font-size:32px}
+ .poems{grid-template-columns:1fr}.categories{grid-template-columns:repeat(3,1fr)}
+ footer{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="logo"><div class="logo-mark">⌁</div><div><strong>Şiirhane</strong><small>Her şiir, yeni bir dünya...</small></div></div>
+  <a href="#ana">Ana Sayfa</a><a href="#siirler">Şiirler</a><a href="#kategoriler">Kategoriler</a>
+  <div class="search">⌕ <input id="search" placeholder="Şiir veya şair ara..."></div>
+  <button class="btn light" onclick="openModal()">Şiir Paylaş</button>
+</header>
+
+<section class="hero" id="ana">
+  <div>
+    <h1>Şiir, insanın<br>kendisiyle konuşma biçimidir...</h1>
+    <p>Burada, her kelime bir duygunun izini taşır.<br>Sen de kendi şiirini paylaş, bu güzel yolculukta bize katıl.</p>
+    <button class="btn light" onclick="openModal()">✒ Şiirini Paylaş</button>
+  </div>
+  <div class="quote">“En güzel şiirler,<br>kalpten kalbe yazılanlardır...”</div>
+</section>
+
+<main class="container">
+  <div class="grid">
+    <section>
+      <article class="card feature">
+        <div>
+          <span class="label">★ Günün Şiiri</span>
+          <h2>Yalnızlık da Bir Yurt Gibi</h2>
+          <p class="excerpt">“Bazen insan, kalabalıkların içinde bile yalnızdır. Çünkü bazı yürekler, sadece kendini duyar...”</p>
+          <div class="meta">◉ Zeynep Arslan · 12 Nisan 2025</div>
+          <div class="actions"><button class="action" onclick="like(this)">♥ <span>482</span></button><button class="action">♡ 76</button><button class="action" onclick="save(this)">🔖</button><button class="action" onclick="sharePoem()">↗</button></div>
+        </div>
+        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Günün şiiri">
+      </article>
+
+      <div class="section-head" id="kategoriler"><h2>⌁ Kategoriler</h2><small>Tüm Kategoriler →</small></div>
+      <div class="categories">
+        <div class="category active" data-cat="Aşk"><span>♥</span><small>Aşk</small></div>
+        <div class="category" data-cat="Hüzün"><span>☁</span><small>Hüzün</small></div>
+        <div class="category" data-cat="Yalnızlık"><span>♟</span><small>Yalnızlık</small></div>
+        <div class="category" data-cat="Doğa"><span>❧</span><small>Doğa</small></div>
+        <div class="category" data-cat="Umut"><span>☼</span><small>Umut</small></div>
+        <div class="category" data-cat="Hayat"><span>⌛</span><small>Hayat</small></div>
+        <div class="category" data-cat="Diğer"><span>•••</span><small>Diğer</small></div>
+      </div>
+
+      <div class="section-head" id="siirler"><h2>▤ En Yeni Şiirler</h2><small id="resultText">Tümünü Gör →</small></div>
+      <div class="poems" id="poems"></div>
+      <div class="empty" id="empty">Aramana uygun şiir bulunamadı.</div>
+    </section>
+
+    <aside>
+      <div class="card side">
+        <h3>♨ En Popüler Şiirler</h3>
+        <div class="rank"><span class="num">1</span><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=160&q=80"><div><strong>Aşk Her Zaman Kazanır mı?</strong><small>Elif Kaya · ♡ 1.2K</small></div></div>
+        <div class="rank"><span class="num">2</span><img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=160&q=80"><div><strong>Biraz Hüzün, Biraz Umut</strong><small>Mertcan Yıldız · ♡ 984</small></div></div>
+        <div class="rank"><span class="num">3</span><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=160&q=80"><div><strong>Doğanın Sessizliği</strong><small>Nisanur Demir · ♡ 876</small></div></div>
+        <div class="rank"><span class="num">4</span><img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=160&q=80"><div><strong>Kayıp Zamanlar</strong><small>Emre Şahin · ♡ 742</small></div></div>
+        <div class="rank"><span class="num">5</span><img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=160&q=80"><div><strong>Sen Gittin Ya...</strong><small>Duru Çelik · ♡ 698</small></div></div>
+      </div>
+      <div class="card side" style="margin-top:20px;text-align:center">
+        <h3>♧ Şiirden Alıntılar</h3><p style="font-style:italic;line-height:1.8">“Şiir, kelimelerin<br>en güzel halidir.”</p>
+      </div>
+      <div class="callout"><div style="font-size:17px">Sen de şiirlerini paylaş,<br>bu güzel topluluğun bir parçası ol.</div><br><button class="btn light" onclick="openModal()">♙ Hemen Kayıt Ol</button></div>
+    </aside>
+  </div>
+</main>
+
+<footer><div><div style="font-size:25px">⌁ Şiirhane</div><small>Her şiir, yeni bir dünya...</small></div><div><small>Ana Sayfa · Şiirler · Yazarlar · Kategoriler · Hakkımızda · İletişim</small></div><div><small>© 2026 Şiirhane</small></div></footer>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <h2>Şiirini Paylaş ✍️</h2>
+  <form id="poemForm">
+   <div class="field"><label>Şiir başlığı</label><input id="title" required placeholder="Şiirine bir isim ver..."></div>
+   <div class="field"><label>Şair adı</label><input id="author" required placeholder="Adın veya mahlasın..."></div>
+   <div class="field"><label>Kategori</label><select id="cat"><option>Aşk</option><option>Hüzün</option><option>Yalnızlık</option><option>Doğa</option><option>Umut</option><option>Hayat</option><option>Diğer</option></select></div>
+   <div class="field"><label>Şiirin</label><textarea id="body" required placeholder="Kelimelerini buraya bırak..."></textarea></div>
+   <div class="modal-actions"><button type="button" class="btn light" onclick="closeModal()">Vazgeç</button><button class="btn">Yayınla</button></div>
+  </form>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const basePoems=[
+ {title:"İlkbahar Gibi",author:"Beren Aksoy",cat:"Umut",text:"Rüzgârın taşıdığı her çiçek, yeniden doğuşun müjdesidir...",img:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=700&q=80"},
+ {title:"Ay Işığında",author:"Kerem Bayraktar",cat:"Yalnızlık",text:"Ay, yine aynı yerde, ama bu gece daha yalnız...",img:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80"},
+ {title:"Sessiz Bir Veda",author:"Selin Karaca",cat:"Hüzün",text:"Bazı vedalar, kelimelere değil, sadece bakışlara yazılır...",img:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80"},
+ {title:"Yolculuk",author:"Alp Yılmaz",cat:"Doğa",text:"Her adımda biraz daha kendime yaklaşıyorum...",img:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=700&q=80"}
+];
+let poems=JSON.parse(localStorage.getItem("siirhane-poems")||"null")||basePoems;
+const el=id=>document.getElementById(id);
+function render(filter="",cat=""){
+ const list=poems.filter(p=>(!filter||(p.title+" "+p.author+" "+p.text).toLowerCase().includes(filter.toLowerCase()))&&(!cat||p.cat===cat));
+ el("poems").innerHTML=list.map((p,i)=>`<article class="card poem"><img src="${p.img}" alt=""><div class="poem-body"><small>${p.cat}</small><h3>${escapeHtml(p.title)}</h3><div class="meta">${escapeHtml(p.author)}</div><p>${escapeHtml(p.text)}</p><div class="actions"><button class="action" onclick="like(this)">♥ <span>${312-i*34}</span></button><button class="action">♡</button><button class="action" onclick="save(this)">🔖</button></div></div></article>`).join("");
+ el("empty").style.display=list.length?"none":"block";
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function like(b){b.classList.toggle("liked");let s=b.querySelector("span");if(s)s.textContent=+s.textContent+(b.classList.contains("liked")?1:-1);toast(b.classList.contains("liked")?"Şiir beğenilerine eklendi.":"Beğeni kaldırıldı.");}
+function save(b){b.classList.toggle("liked");toast(b.classList.contains("liked")?"Şiir kaydedildi.":"Kayıt kaldırıldı.");}
+function sharePoem(){navigator.clipboard?.writeText(location.href);toast("Şiir bağlantısı kopyalandı.");}
+function toast(t){el("toast").textContent=t;el("toast").style.display="block";setTimeout(()=>el("toast").style.display="none",1800)}
+function openModal(){el("modal").classList.add("open")}
+function closeModal(){el("modal").classList.remove("open")}
+el("search").addEventListener("input",e=>render(e.target.value));
+document.querySelectorAll(".category").forEach(c=>c.addEventListener("click",()=>{document.querySelectorAll(".category").forEach(x=>x.classList.remove("active"));c.classList.add("active");render(el("search").value,c.dataset.cat==="Aşk"?"":c.dataset.cat)}));
+el("poemForm").addEventListener("submit",e=>{e.preventDefault();poems.unshift({title:el("title").value,author:el("author").value,cat:el("cat").value,text:el("body").value,img:"https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=700&q=80"});localStorage.setItem("siirhane-poems",JSON.stringify(poems));e.target.reset();closeModal();render();toast("Şiirin başarıyla yayınlandı! ✨")});
+el("modal").addEventListener("click",e=>{if(e.target===el("modal"))closeModal()});
+render();
+</script>
+</body>
+</html>
