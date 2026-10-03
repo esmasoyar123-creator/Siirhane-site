@@ -1,4 +1,5 @@
 'use client';
+import { supabase } from '../lib/supabase';
 import {useEffect,useMemo,useState} from 'react';
 const base=[
  {title:'İlkbahar Gibi',author:'Beren Aksoy',cat:'Umut',text:'Rüzgârın taşıdığı her çiçek, yeniden doğuşun müjdesidir...',img:'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=700&q=80'},
